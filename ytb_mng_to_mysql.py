@@ -1,7 +1,6 @@
 import pandas as pd
 from pymongo import MongoClient
 from app import client
-#client = MongoClient("mongodb://localhost:27017")
 mydb = client["Youtube"]
 ytchnl1 = mydb["youtubechannel1"]
 
@@ -18,7 +17,6 @@ video_info = {'video_name': [], 'video_id': [], 'playlist_id': [], 'video_descri
 docid = []
 chnname = []
 for document in documents:
-    #print(document["_id"])
     docid.append(document["_id"])
     i = document["Channel_Name"]["Channel_Name"]
     j = document["Channel_Name"]["Channel_Id"]
@@ -27,7 +25,7 @@ for document in documents:
     m = document["Channel_Name"]["Channel_Description"]
     n = document["Channel_Name"]["Playlist_Id"]
     o = document["Channel_Name"]["playlist_Title"]
-    p = "NAN"
+    p = "NAN"  #### there are some fields where you tube restricted the access to such data so i just keeping those as NAN 
     channel_info['channel_id'].append(j)
     channel_info['channel_name'].append(i)
     channel_info['channel_type'].append(p)
@@ -102,29 +100,14 @@ comment_df['comment_published_date'] = pd.to_datetime(comment_df['comment_publis
 
 from sqlalchemy import create_engine
 from app import database, engine1, engine
-#engine1 = create_engine("mysql+pymysql://{user}:{pw}@localhost".format(user="root", pw="root123"))
-
 existing_databases = engine1.execute("SHOW DATABASES;")
 print(existing_databases)
 # Results are a list of single item tuples, so unpack each tuple
 existing_databases = [d[0] for d in existing_databases]
-#database = "youtubescrp1"
 print(existing_databases)
-
 if database not in existing_databases:
     engine1.execute("CREATE DATABASE {0}".format(database))
     print("Created database {0}".format(database))
-    #engine = create_engine("mysql+pymysql://{user}:{pw}@localhost/{db}".format(user="root", pw="root123", db = database))
-
-
-
-    '''database = "Youtubescrp1"
-
-    engine = create_engine("mysql+pymysql://{user}:{pw}@localhost/{db}"
-                       .format(user="root",
-                               pw="root123",
-                              db = database))'''
-    #engine = create_engine("mysql+pymysql://{user}:{pw}@localhost/{db}".format(user="root", pw="root123", db = database))
     engine.execute("SET FOREIGN_KEY_CHECKS=0;")
     engine.execute("SET @@global.sql_mode= '';")
     engine.execute("create table Channel (channel_id VARCHAR(255) NOT NULL PRIMARY KEY, channel_name VARCHAR(255) NOT NULL, channel_type VARCHAR(255) NOT NULL, channel_views int(10) NOT NULL, channel_description VARCHAR(255) NOT NULL, channel_status VARCHAR(255));")
