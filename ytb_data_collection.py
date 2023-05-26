@@ -9,10 +9,8 @@ print(api_key1)
 # Set up the YouTube Data API v3 service
 api_service_name = "youtube"
 api_version = "v3"
-# api_key = "AIzaSyDnmH59NWwBaPAafIN17BWTmXrLw5MWSi8"
-#api_key = "AIzaSyCWYh3QpahUz_tdmrqA293MybKqFo6fF_Y"
 api_key = api_key1
-# Replace with your API key
+# Replace with your API key in config.py file
 youtube = build(api_service_name, api_version, developerKey=api_key)
 
 
@@ -165,7 +163,6 @@ for i in CHIDLIST:
             json.dump(channel_data, final)
         from pymongo import MongoClient
         from app import client
-        #client = MongoClient("mongodb://localhost:27017")
         mydb = client["Youtube"]
         ytchnl1 = mydb["youtubechannel1"]
         mydb.ytchnl1.insert_many([channel_data])
