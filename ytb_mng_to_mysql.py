@@ -132,5 +132,13 @@ if database not in existing_databases:
     engine.execute("CREATE VIEW Channel_that_published_video_in_year2022 AS SELECT channel_name FROM video, channel, playlist WHERE video.playlist_id = playlist.playlist_id AND channel.channel_id = playlist.channel_id AND YEAR(published_date)  = 2022;")
     engine.execute("CREATE VIEW More_comments AS select channel_name, comment_count, video_name from video, channel, playlist WHERE video.playlist_id = playlist.playlist_id AND channel.channel_id = playlist.channel_id ORDER BY comment_count DESC LIMIT 10;")
     engine.execute("CREATE VIEW channel_id_info AS select channel_name, channel.channel_id, count(video_id) from video, channel, playlist WHERE video.playlist_id = playlist.playlist_id AND channel.channel_id = playlist.channel_id GROUP BY channel_name;")
-
+else:
+    engine.execute("SET FOREIGN_KEY_CHECKS=0;")
+    engine.execute("SET @@global.sql_mode= '';")
+    channel_df.to_sql('channel', con = engine, if_exists = 'append', index= False)
+    playlist_df.to_sql('playlist', con = engine, if_exists = 'append', index= False)
+    video_df.to_sql('video', con = engine, if_exists = 'append', index= False)
+    comment_df.to_sql('comment', con = engine, if_exists = 'append', index= False)
+    engine.execute("SET FOREIGN_KEY_CHECKS=1;")
+ 
 mydb.ytchnl1.drop()
