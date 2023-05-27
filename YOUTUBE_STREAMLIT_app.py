@@ -12,14 +12,22 @@ st.title("Youtube Data Scrapping")
 
 st.write("Please enter Channel Id with comma seperated")
 ytb_channel_id = st.text_input("channel_ids")
-
-button = st.button("Click to start harvesting")
-if button:
-    f = open("temp.txt", "w")
-    st.write(ytb_channel_id)
-    f.write(ytb_channel_id)
-    f.close()
-    subprocess.run([f"{sys.executable}", cwd + "\\ytb_data_collection.py"])
+extxhnl = pd.read_sql_query("SELECT * from channel_id_info;", con=engine)
+j = [i for i in extxhnl['channel_id'] if i in ytb_channel_id]
+if len(j)>0:
+    k=str(j[0:])
+    k=k.replace("[","")
+    k=k.replace("]","")
+    st.write(k.replace("[",""))
+    st.write("data already exist for channels if you want to harvest again drop existing data using options in sidebar and harvest")
+else:
+    button = st.button("Click to start harvesting", key="button2")
+    if button:
+        f = open("temp.txt", "w")
+        st.write(ytb_channel_id)
+        f.write(ytb_channel_id)
+        f.close()
+        subprocess.run([f"{sys.executable}", cwd + "\\ytb_data_collection.py"])
 st.sidebar.title("you tube data insights ")
 button1 = st.sidebar.button("Upload to MYSQL DB")
 if button1:
